@@ -1,3 +1,5 @@
+/*jshint devel: true */
+
 /**
  * preparation:
  *
@@ -494,11 +496,13 @@ ImagePannerZoomer.prototype.export = function () {
 
 /* ========================================================================= */
 
+/*jshint -W003 */
 var ImagePannerZoomerImage = function (object) {
     Object.keys(object).forEach(function (key) {
         this[key] = object[key];
     }, this);
 };
+/*jshint +W003 */
 
 ImagePannerZoomerImage.prototype.initializeSizeAndPosition = function (width, height, x, y) {
     var savedWidth  = localStorage.getItem(this.getStorageKey("width"));
