@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ImagePannerZoomer Demo</title>
+		<style>
+			#ipz {
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				background-color: #ccc;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="ipz">
+		</div>
+
+		<script src="../src/js/ImagePannerZoomer.js"></script>
+
+		<script>
+			var images = [
+				{ src: "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" },
+				{ src: "https://media.giphy.com/media/8vQSQ3cNXuDGo/giphy.gif" },
+				{ src: "https://media.giphy.com/media/PqdfIrXEza6fC/giphy.gif" },
+				{ src: "https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" },
+				{ src: "https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif" }
+			];
+			var ipz = new ImagePannerZoomer({
+				images: images,
+				containerElement: document.getElementById("ipz")
+			});
+			ipz.run();
+		</script>
+
+	</body>
+</html>
