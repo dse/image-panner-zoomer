@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "ES6"
+    },
+    "files": [
+        "ImagePannerZoomer.ts",
+        "ImagePannerZoomerImage.ts"
+    ]
+}
