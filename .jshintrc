@@ -1,0 +1,42 @@
+// -*- js -*-
+{
+    // See: http://jshint.com/docs/options/
+    // See also: javascript.md
+
+    // See also: https://github.com/airbnb/javascript/blob/master/linters/.jshintrc
+
+    // prohibit bitwise operators such as ^, |, and &.
+    "bitwise": true,
+
+    // defines globals exposed by modern browsers, such as `document`
+    // and `FileReader`.
+    "browser": true,
+
+    // require curly braces around blocks in loops and conditionals.
+    "curly": true,
+
+    // prohibit the use of == and !=.
+    "eqeqeq": true,
+
+    // require all `for in` loops to filter objects' items.
+    "forin": true,
+
+    // warn about the use of identifiers defined in future versions of
+    // JavaScript.
+    "futurehostile": true,
+
+    // prohibit the use of a variable before it is defined.
+    "latedef": true,
+
+    // prohibit the use of the comma operator.
+    "nocomma": true,
+
+    // warn about no-break space characters.
+    "nonbsp": true,
+
+    // prohibit the use of constructors for side effects.
+    "nonew": true,
+
+    // prohibit the use of undeclared variables.
+    "undef": true
+}
