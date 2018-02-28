@@ -23,15 +23,15 @@
  *
  * constructor:
  *
- *     var imagethingy = new ImageThingy(images, containerElement);
+ *     var ipz = new ImagePannerZoomer(images, containerElement);
  *     // --- or ---
- *     var imagethingy = new ImageThingy({
+ *     var ipz = new ImagePannerZoomer({
  *         images: images,
  *         containerElement: containerElement
  *     });
  */
 
-var ImageThingy = function (/* arguments */) {
+var ImagePannerZoomer = function (/* arguments */) {
 
     // defaults
     this.zoomIncrement = 0.5;
@@ -63,23 +63,23 @@ var ImageThingy = function (/* arguments */) {
     // normalize images to objects
     this.images = this.images.map(function (image) {
         if (typeof image === "object") {
-            if (image instanceof ImageThingyImage) {
+            if (image instanceof ImagePannerZoomerImage) {
                 return image;
             } else {
-                return new ImageThingyImage(image);
+                return new ImagePannerZoomerImage(image);
             }
         } else if (typeof image === "string") {
-            return new ImageThingyImage({
+            return new ImagePannerZoomerImage({
                 src: image
             });
         } else {
-            throw new Exception("ImageThingy: images must be ImageThingyImage objects, other objects, or strings");
+            throw new Exception("ImagePannerZoomer: images must be ImagePannerZoomerImage objects, other objects, or strings");
         }
     }, this);
 
     // add indexes to each image
     this.images.forEach(function (image, index) {
-        image.ownerImageThingy = this;
+        image.ownerImagePannerZoomer = this;
         image.index = index;
     }, this);
 
@@ -98,13 +98,13 @@ var ImageThingy = function (/* arguments */) {
     this.controlIsDown = false;
 };
 
-ImageThingy.SEPARATOR = String.fromCharCode(28);
+ImagePannerZoomer.SEPARATOR = String.fromCharCode(28);
 
-ImageThingy.prototype.onImageLoad = function (index) {
+ImagePannerZoomer.prototype.onImageLoad = function (index) {
     var image = this.images[index];
 };
 
-ImageThingy.prototype.onAllImagesLoaded = function () {
+ImagePannerZoomer.prototype.onAllImagesLoaded = function () {
     this.images.forEach(function (image) {
         image.imageElement.style.display = "inline"; // ready to show
     });
@@ -112,13 +112,13 @@ ImageThingy.prototype.onAllImagesLoaded = function () {
     this.placeImages();
 };
 
-ImageThingy.prototype.placeImages = function () {
+ImagePannerZoomer.prototype.placeImages = function () {
     this.images.forEach(function (image, index) {
         image.place();
     }, this);
 };
 
-ImageThingy.prototype.initializeSizesAndPositions = function (index) {
+ImagePannerZoomer.prototype.initializeSizesAndPositions = function (index) {
     var x = 0;
     var y = 0;
     this.images.forEach(function (image, index) {
@@ -139,7 +139,7 @@ ImageThingy.prototype.initializeSizesAndPositions = function (index) {
     this.zoom = (savedZoom !== null) ? Number(savedZoom) : 0;
 };
 
-ImageThingy.prototype.run = function () {
+ImagePannerZoomer.prototype.run = function () {
     var that = this;
     this.containerElement.innerHTML = "";
     var style = window.getComputedStyle(this.containerElement);
@@ -176,9 +176,9 @@ ImageThingy.prototype.run = function () {
         style = window.getComputedStyle(this.containerElement);
         break;
     case "sticky":
-        throw new Exception("ImageThingy does not support a 'sticky' positioned container element.");
+        throw new Exception("ImagePannerZoomer does not support a 'sticky' positioned container element.");
     default:
-        throw new Exception("ImageThingy does not support a '" + position + "' positioned container element.");
+        throw new Exception("ImagePannerZoomer does not support a '" + position + "' positioned container element.");
     }
     var imageCountRemaining = this.images.length;
     this.images.forEach(function (image, index) {
@@ -217,7 +217,7 @@ ImageThingy.prototype.run = function () {
     window.addEventListener("blur",   this.onWindowBlur.bind(this),  false);
 };
 
-ImageThingy.prototype.onWindowBlur = function (event) {
+ImagePannerZoomer.prototype.onWindowBlur = function (event) {
     // If someone clicks Ctrl+Tab or something in this window, we need
     // to turn off the modifier states.
     this.spaceBarIsDown = false;
@@ -232,7 +232,7 @@ ImageThingy.prototype.onWindowBlur = function (event) {
 };
 
 // excludes browser shortcuts
-ImageThingy.prototype.onKeyPress = function (event) {
+ImagePannerZoomer.prototype.onKeyPress = function (event) {
     if (event.key === "x") {
         if (confirm("Do you wish to clear the cache?")) {
             this.clearStorage();
@@ -256,7 +256,7 @@ ImageThingy.prototype.onKeyPress = function (event) {
 };
 
 // includes browser shortcuts
-ImageThingy.prototype.onKeyDown = function (event) {
+ImagePannerZoomer.prototype.onKeyDown = function (event) {
     if (event.key === " ") {
         this.spaceBarIsDown = true;
         event.preventDefault();
@@ -268,7 +268,7 @@ ImageThingy.prototype.onKeyDown = function (event) {
     }
 };
 
-ImageThingy.prototype.onKeyUp = function (event) {
+ImagePannerZoomer.prototype.onKeyUp = function (event) {
     if (event.key === " ") {
         this.spaceBarIsDown = false;
         event.preventDefault();
@@ -280,7 +280,7 @@ ImageThingy.prototype.onKeyUp = function (event) {
     }
 };
 
-ImageThingy.prototype.onMouseDown = function (event) {
+ImagePannerZoomer.prototype.onMouseDown = function (event) {
     if (this.spaceBarIsDown) {
         this.startMovingMap();
     } else if (this.controlIsDown) {
@@ -299,7 +299,7 @@ ImageThingy.prototype.onMouseDown = function (event) {
     return false;
 };
 
-ImageThingy.prototype.onMouseUp = function (event) {
+ImagePannerZoomer.prototype.onMouseUp = function (event) {
     if (this.isMovingMap) {
         this.stopMovingMap();
     } else if (this.isMovingImage) {
@@ -311,7 +311,7 @@ ImageThingy.prototype.onMouseUp = function (event) {
     return false;
 };
 
-ImageThingy.prototype.onMouseMove = function (event) {
+ImagePannerZoomer.prototype.onMouseMove = function (event) {
     var movementX = event.movementX;
     var movementY = event.movementY;
     var zoomRatio = Math.pow(2, this.zoom);
@@ -344,11 +344,11 @@ ImageThingy.prototype.onMouseMove = function (event) {
     }
 };
 
-ImageThingy.prototype.onResize = function (event) {
+ImagePannerZoomer.prototype.onResize = function (event) {
     this.placeImages();
 };
 
-ImageThingy.prototype.onWheel = function (event) {
+ImagePannerZoomer.prototype.onWheel = function (event) {
     if (this.isMoving) {
         event.preventDefault();
         return false;
@@ -367,15 +367,15 @@ ImageThingy.prototype.onWheel = function (event) {
     }
 };
 
-ImageThingy.prototype.incrementZoom = function (increment) {
+ImagePannerZoomer.prototype.incrementZoom = function (increment) {
     this.setZoom(this.zoom + increment);
 };
 
-ImageThingy.prototype.decrementZoom = function (decrement) {
+ImagePannerZoomer.prototype.decrementZoom = function (decrement) {
     this.setZoom(this.zoom - decrement);
 };
 
-ImageThingy.prototype.setZoom = function (zoom) {
+ImagePannerZoomer.prototype.setZoom = function (zoom) {
     if (zoom > 4) {
         zoom = 4;
     } else if (zoom < -4) {
@@ -384,13 +384,13 @@ ImageThingy.prototype.setZoom = function (zoom) {
     this.zoom = zoom;
 };
 
-ImageThingy.prototype.store = function () {
+ImagePannerZoomer.prototype.store = function () {
     localStorage.setItem(this.getStorageKey("x"),    this.x);
     localStorage.setItem(this.getStorageKey("y"),    this.y);
     localStorage.setItem(this.getStorageKey("zoom"), this.zoom);
 };
 
-ImageThingy.prototype.startMovingMap = function () {
+ImagePannerZoomer.prototype.startMovingMap = function () {
     this.dragX = 0;
     this.dragY = 0;
     this.originalX = this.x;
@@ -403,7 +403,7 @@ ImageThingy.prototype.startMovingMap = function () {
     this.imageBeingMoved = null;
 };
 
-ImageThingy.prototype.stopMovingMap = function () {
+ImagePannerZoomer.prototype.stopMovingMap = function () {
     this.dragX = null;
     this.dragY = null;
     this.originalX = null;
@@ -416,7 +416,7 @@ ImageThingy.prototype.stopMovingMap = function () {
     this.imageBeingMoved = null;
 };
 
-ImageThingy.prototype.startMovingImage = function (image) {
+ImagePannerZoomer.prototype.startMovingImage = function (image) {
     this.dragX = 0;
     this.dragY = 0;
     this.originalX = image.x;
@@ -429,7 +429,7 @@ ImageThingy.prototype.startMovingImage = function (image) {
     this.imageBeingMoved = image;
 };
 
-ImageThingy.prototype.stopMovingImage = function () {
+ImagePannerZoomer.prototype.stopMovingImage = function () {
     this.dragX = null;
     this.dragY = null;
     this.originalX = null;
@@ -442,7 +442,7 @@ ImageThingy.prototype.stopMovingImage = function () {
     this.imageBeingMoved = null;
 };
 
-ImageThingy.prototype.startMovingZoom = function () {
+ImagePannerZoomer.prototype.startMovingZoom = function () {
     this.dragX = 0;
     this.dragY = 0;
     this.originalX = null;
@@ -455,7 +455,7 @@ ImageThingy.prototype.startMovingZoom = function () {
     this.imageBeingMoved = null;
 };
 
-ImageThingy.prototype.stopMovingZoom = function () {
+ImagePannerZoomer.prototype.stopMovingZoom = function () {
     this.dragX = null;
     this.dragY = null;
     this.originalX = null;
@@ -468,11 +468,11 @@ ImageThingy.prototype.stopMovingZoom = function () {
     this.imageBeingMoved = null;
 };
 
-ImageThingy.prototype.getStorageKey = function (key) {
-    return ["imageThingy", key].join(ImageThingy.SEPARATOR);
+ImagePannerZoomer.prototype.getStorageKey = function (key) {
+    return ["imagePannerZoomer", key].join(ImagePannerZoomer.SEPARATOR);
 };
 
-ImageThingy.prototype.clearStorage = function () {
+ImagePannerZoomer.prototype.clearStorage = function () {
     localStorage.removeItem(this.getStorageKey("x"));
     localStorage.removeItem(this.getStorageKey("y"));
     this.images.forEach(function (image) {
@@ -480,7 +480,7 @@ ImageThingy.prototype.clearStorage = function () {
     }, this);
 };
 
-ImageThingy.prototype.export = function () {
+ImagePannerZoomer.prototype.export = function () {
     return {
         zoomIncrement: this.zoomIncrement,
         imageWidth:    this.imageWidth,
@@ -494,13 +494,13 @@ ImageThingy.prototype.export = function () {
 
 /* ========================================================================= */
 
-var ImageThingyImage = function (object) {
+var ImagePannerZoomerImage = function (object) {
     Object.keys(object).forEach(function (key) {
         this[key] = object[key];
     }, this);
 };
 
-ImageThingyImage.prototype.initializeSizeAndPosition = function (width, height, x, y) {
+ImagePannerZoomerImage.prototype.initializeSizeAndPosition = function (width, height, x, y) {
     var savedWidth  = localStorage.getItem(this.getStorageKey("width"));
     var savedHeight = localStorage.getItem(this.getStorageKey("height"));
     var savedX      = localStorage.getItem(this.getStorageKey("x"));
@@ -512,7 +512,7 @@ ImageThingyImage.prototype.initializeSizeAndPosition = function (width, height, 
     this.setSizeAndPosition(width, height, x, y);
 };
 
-ImageThingyImage.prototype.setSizeAndPosition = function (width, height, x, y) {
+ImagePannerZoomerImage.prototype.setSizeAndPosition = function (width, height, x, y) {
     this.width = width;
     this.height = height;
     this.x = x;
@@ -522,19 +522,19 @@ ImageThingyImage.prototype.setSizeAndPosition = function (width, height, x, y) {
     this.store();
 };
 
-ImageThingyImage.prototype.store = function () {
+ImagePannerZoomerImage.prototype.store = function () {
     localStorage.setItem(this.getStorageKey("width"),  this.width);
     localStorage.setItem(this.getStorageKey("height"), this.height);
     localStorage.setItem(this.getStorageKey("x"),      this.x);
     localStorage.setItem(this.getStorageKey("y"),      this.y);
 };
 
-ImageThingyImage.prototype.place = function () {
-    var ownerWidth  = this.ownerImageThingy.containerElement.offsetWidth;
-    var ownerHeight = this.ownerImageThingy.containerElement.offsetHeight;
-    var ownerX      = this.ownerImageThingy.x;
-    var ownerY      = this.ownerImageThingy.y;
-    var ownerZoom   = this.ownerImageThingy.zoom;
+ImagePannerZoomerImage.prototype.place = function () {
+    var ownerWidth  = this.ownerImagePannerZoomer.containerElement.offsetWidth;
+    var ownerHeight = this.ownerImagePannerZoomer.containerElement.offsetHeight;
+    var ownerX      = this.ownerImagePannerZoomer.x;
+    var ownerY      = this.ownerImagePannerZoomer.y;
+    var ownerZoom   = this.ownerImagePannerZoomer.zoom;
 
     var zoomRatio = Math.pow(2, ownerZoom);
 
@@ -552,18 +552,18 @@ ImageThingyImage.prototype.place = function () {
     this.imageElement.style.height       = height + "px";
 };
 
-ImageThingyImage.prototype.getStorageKey = function (key) {
-    return ["imageThingyImage", this.src, key].join(ImageThingy.SEPARATOR);
+ImagePannerZoomerImage.prototype.getStorageKey = function (key) {
+    return ["imagePannerZoomerImage", this.src, key].join(ImagePannerZoomer.SEPARATOR);
 };
 
-ImageThingyImage.prototype.clearStorage = function () {
+ImagePannerZoomerImage.prototype.clearStorage = function () {
     localStorage.removeItem(this.getStorageKey("width"));
     localStorage.removeItem(this.getStorageKey("height"));
     localStorage.removeItem(this.getStorageKey("x"));
     localStorage.removeItem(this.getStorageKey("y"));
 };
 
-ImageThingyImage.prototype.export = function () {
+ImagePannerZoomerImage.prototype.export = function () {
     return {
         src:    this.src,
         width:  this.width,
