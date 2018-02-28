@@ -1,5 +1,13 @@
 /**
- * @usage
+ * preparation:
+ *
+ *     <div id="elementid"></div>
+ *
+ *     <style>
+ *         #elementid {
+ *             / * specify a width and height and/or positioning info * /
+ *         }
+ *     </style>
  *
  *     var images = [
  *         "foo.jpg",
@@ -7,13 +15,13 @@
  *     ];
  *     // --- or ---
  *     var images = [
- *         { src: "foo.jpg" },
+ *         { label: "foo", src: "foo.jpg" },
  *         ...
  *     ];
  *
  *     var containerElement = document.getElementById("elementid");
  *
- * @constructor
+ * constructor:
  *
  *     var imagethingy = new ImageThingy(images, containerElement);
  *     // --- or ---
@@ -457,6 +465,18 @@ ImageThingy.prototype.clearStorage = function () {
     }, this);
 };
 
+ImageThingy.prototype.export = function () {
+    return {
+        zoomIncrement: this.zoomIncrement,
+        imageWidth:    this.imageWidth,
+        gridSpacing:   this.gridSpacing,
+        images:        this.images.map(function (image) { return image.export(); }),
+        zoom:          this.zoom,
+        x:             this.x,
+        y:             this.y
+    };
+};
+
 /* ========================================================================= */
 
 var ImageThingyImage = function (object) {
@@ -503,18 +523,18 @@ ImageThingyImage.prototype.place = function () {
 
     var zoomRatio = Math.pow(2, ownerZoom);
 
-    var x = ownerWidth / 2 - ownerX * zoomRatio + this.x * zoomRatio;
+    var x = ownerWidth  / 2 - ownerX * zoomRatio + this.x * zoomRatio;
     var y = ownerHeight / 2 - ownerY * zoomRatio + this.y * zoomRatio;
-    var width = this.width * zoomRatio;
+    var width  = this.width  * zoomRatio;
     var height = this.height * zoomRatio;
 
     this.containerElement.style.position = "absolute";
-    this.containerElement.style.left   = x + "px";
-    this.containerElement.style.top    = y + "px";
-    this.containerElement.style.width  = width + "px";
-    this.containerElement.style.height = height + "px";
-    this.imageElement.style.width  = width + "px";
-    this.imageElement.style.height = height + "px";
+    this.containerElement.style.left     = x + "px";
+    this.containerElement.style.top      = y + "px";
+    this.containerElement.style.width    = width + "px";
+    this.containerElement.style.height   = height + "px";
+    this.imageElement.style.width        = width + "px";
+    this.imageElement.style.height       = height + "px";
 };
 
 ImageThingyImage.prototype.getStorageKey = function (key) {
@@ -526,4 +546,14 @@ ImageThingyImage.prototype.clearStorage = function () {
     localStorage.removeItem(this.getStorageKey("height"));
     localStorage.removeItem(this.getStorageKey("x"));
     localStorage.removeItem(this.getStorageKey("y"));
+};
+
+ImageThingyImage.prototype.export = function () {
+    return {
+        src:    this.src,
+        width:  this.width,
+        height: this.height,
+        x:      this.x,
+        y:      this.y
+    };
 };
