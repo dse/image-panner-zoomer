@@ -215,8 +215,8 @@ ImagePannerZoomer.prototype.run = function () {
     document.addEventListener("mouseup",   this.onMouseUp.bind(this),   false);
     document.addEventListener("mousemove", this.onMouseMove.bind(this), false);
     document.addEventListener("wheel",     this.onWheel.bind(this),     false);
-    window.addEventListener("resize", this.onResize.bind(this),      false);
-    window.addEventListener("blur",   this.onWindowBlur.bind(this),  false);
+    window.addEventListener("resize", this.onWindowResize.bind(this), false);
+    window.addEventListener("blur",   this.onWindowBlur.bind(this),   false);
 };
 
 ImagePannerZoomer.prototype.onWindowBlur = function (event) {
@@ -346,7 +346,7 @@ ImagePannerZoomer.prototype.onMouseMove = function (event) {
     }
 };
 
-ImagePannerZoomer.prototype.onResize = function (event) {
+ImagePannerZoomer.prototype.onWindowResize = function (event) {
     this.placeImages();
 };
 
