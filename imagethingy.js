@@ -206,14 +206,29 @@ ImageThingy.prototype.run = function () {
             image.containerElement.appendChild(image.labelElement);
         }
     }, this);
-    document.addEventListener("keydown",   this.onKeyDown.bind(this), false);
-    document.addEventListener("keyup",     this.onKeyUp.bind(this), false);
-    document.addEventListener("keypress",  this.onKeyPress.bind(this), false);
+    document.addEventListener("keydown",   this.onKeyDown.bind(this),   false);
+    document.addEventListener("keyup",     this.onKeyUp.bind(this),     false);
+    document.addEventListener("keypress",  this.onKeyPress.bind(this),  false);
     document.addEventListener("mousedown", this.onMouseDown.bind(this), false);
-    document.addEventListener("mouseup",   this.onMouseUp.bind(this), false);
+    document.addEventListener("mouseup",   this.onMouseUp.bind(this),   false);
     document.addEventListener("mousemove", this.onMouseMove.bind(this), false);
-    document.addEventListener("wheel",     this.onWheel.bind(this), false);
-    window.addEventListener("resize", this.onResize.bind(this), false);
+    document.addEventListener("wheel",     this.onWheel.bind(this),     false);
+    window.addEventListener("resize", this.onResize.bind(this),      false);
+    window.addEventListener("blur",   this.onWindowBlur.bind(this),  false);
+};
+
+ImageThingy.prototype.onWindowBlur = function (event) {
+    // If someone clicks Ctrl+Tab or something in this window, we need
+    // to turn off the modifier states.
+    this.spaceBarIsDown = false;
+    this.controlIsDown = false;
+    if (this.isMovingMap) {
+        this.stopMovingMap();
+    } else if (this.isMovingImage) {
+        this.stopMovingImage();
+    } else if (this.isMovingZoom) {
+        this.stopMovingZoom();
+    }
 };
 
 // excludes browser shortcuts
