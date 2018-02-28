@@ -55,9 +55,9 @@ var ImagePannerZoomer = function (/* arguments */) {
 
     // sanity check
     if (!this.images) {
-        throw new Exception("No images array specified");
+        throw new Error("No images array specified");
     } else if (!this.containerElement) {
-        throw new Exception("No containerElement specified or containerElement not found");
+        throw new Error("No containerElement specified or containerElement not found");
     }
 
     // normalize images to objects
@@ -73,7 +73,7 @@ var ImagePannerZoomer = function (/* arguments */) {
                 src: image
             });
         } else {
-            throw new Exception("ImagePannerZoomer: images must be ImagePannerZoomerImage objects, other objects, or strings");
+            throw new Error("ImagePannerZoomer: images must be ImagePannerZoomerImage objects, other objects, or strings");
         }
     }, this);
 
@@ -176,9 +176,9 @@ ImagePannerZoomer.prototype.run = function () {
         style = window.getComputedStyle(this.containerElement);
         break;
     case "sticky":
-        throw new Exception("ImagePannerZoomer does not support a 'sticky' positioned container element.");
+        throw new Error("ImagePannerZoomer does not support a 'sticky' positioned container element.");
     default:
-        throw new Exception("ImagePannerZoomer does not support a '" + position + "' positioned container element.");
+        throw new Error("ImagePannerZoomer does not support a '" + position + "' positioned container element.");
     }
     var imageCountRemaining = this.images.length;
     this.images.forEach(function (image, index) {
